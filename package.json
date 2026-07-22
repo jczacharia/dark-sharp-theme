@@ -1,0 +1,21 @@
+{
+  "name": "jomby-theme",
+  "displayName": "jomby-theme",
+  "description": "Jomby's Theme",
+  "version": "0.0.4",
+  "engines": {
+    "vscode": "^1.125.0"
+  },
+  "categories": [
+    "Themes"
+  ],
+  "contributes": {
+    "themes": [
+      {
+        "label": "Jomby",
+        "uiTheme": "vs-dark",
+        "path": "./themes/Jomby-color-theme.json"
+      }
+    ]
+  }
+}
