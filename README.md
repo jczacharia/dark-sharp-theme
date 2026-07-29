@@ -63,19 +63,6 @@ That's it. No other settings are needed for either stack.
 
 ![C# with semantic highlighting](images/csharp.png)
 
-## Development
-
-Screenshots are generated automatically (requires Node ≥ 22 and the .NET SDK):
-
-```bash
-npm install
-npm run screenshots
-```
-
-This spins up an isolated VS Code instance with the C# and Angular Language
-Service extensions, opens the sample workspace in `samples/`, waits for
-semantic highlighting to settle, and writes PNGs to `images/`.
-
 ## License
 
 [MIT](LICENSE)
