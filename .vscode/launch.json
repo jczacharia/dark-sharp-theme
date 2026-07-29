@@ -10,7 +10,7 @@
       "type": "extensionHost",
       "request": "launch",
       "args": [
-        "/home/jcz/dev/projects/Dse.Platform",
+        "${workspaceFolder}/samples",
         "--extensionDevelopmentPath=${workspaceFolder}",
         "--profile=DarkSharp"
       ]

@@ -1,7 +1,8 @@
 node_modules/
 *.vsix
-samples/**/bin/
-samples/**/obj/
+**/bin/
+**/obj/
 .env
 .pi
 .vscode-test
+.superpowers
