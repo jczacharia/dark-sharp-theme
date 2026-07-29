@@ -1,4 +1,12 @@
 .vscode/**
-.vscode-test/**
+.github/**
+.pi/**
+docs/**
+images/**
+samples/**
+scripts/**
+node_modules/**
+.screenshot-workbench/**
 .gitignore
-vsc-extension-quickstart.md
+.gitattributes
+package-lock.json

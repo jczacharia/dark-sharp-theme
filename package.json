@@ -1,21 +1,56 @@
 {
-  "name": "jomby-theme",
-  "displayName": "jomby-theme",
-  "description": "Jomby's Theme",
-  "version": "0.0.4",
+  "name": "dark-sharp-theme",
+  "displayName": "Dark Sharp",
+  "description": "A sharp dark theme built for Angular and .NET developers — full semantic token support with consistent colors across C# and Angular templates.",
+  "version": "1.0.0",
+  "publisher": "jczacharia",
+  "license": "MIT",
+  "icon": "icon.png",
   "engines": {
-    "vscode": "^1.125.0"
+    "vscode": "^1.0.0"
   },
   "categories": [
     "Themes"
   ],
+  "keywords": [
+    "theme",
+    "dark",
+    "dark theme",
+    "color-theme",
+    "sharp",
+    "angular",
+    "dotnet",
+    ".net",
+    "csharp",
+    "c#",
+    "semantic",
+    "semantic tokens",
+    "typescript"
+  ],
+  "galleryBanner": {
+    "color": "#1e1e1e",
+    "theme": "dark"
+  },
+  "pricing": "Free",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jczacharia/dark-sharp-theme"
+  },
   "contributes": {
     "themes": [
       {
-        "label": "Jomby",
+        "label": "Dark Sharp",
         "uiTheme": "vs-dark",
-        "path": "./themes/Jomby-color-theme.json"
+        "path": "./themes/dark-sharp-color-theme.json"
       }
     ]
+  },
+  "scripts": {
+    "screenshots": "node scripts/screenshots.mjs"
+  },
+  "devDependencies": {
+    "@vscode/test-electron": "^2.4.1",
+    "@vscode/vsce": "^3.2.1",
+    "playwright": "^1.49.0"
   }
 }
