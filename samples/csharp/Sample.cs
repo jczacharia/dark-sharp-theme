@@ -1,3 +1,6 @@
+using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
+
 namespace DarkSharp.Samples;
 
 public enum OrderStatus { Pending, Shipped, Delivered, Cancelled }
@@ -14,10 +17,10 @@ public interface IOrderRepository
 
 public class Order
 {
-    public required Guid Id { get; init; }
-    public required string Customer { get; set; }
+    [Required] public required Guid Id { get; init; }
+    [Required] public required string Customer { get; set; }
     public OrderStatus Status { get; private set; } = OrderStatus.Pending;
-    public List<OrderLine> Lines { get; } = [];
+    public ReadOnlyCollection<OrderLine> Lines { get; } = [];
 
     public decimal GrandTotal => Lines.Sum(line => line.Total);
 
@@ -35,7 +38,7 @@ public class OrderService(IOrderRepository repository)
 
     public async Task<decimal> OutstandingRevenueAsync(CancellationToken ct)
     {
-        var pending = await repository.GetByStatusAsync(OrderStatus.Pending, ct);
+        IReadOnlyList<Order> pending = await repository.GetByStatusAsync(OrderStatus.Pending, ct);
         return pending
             .Where(order => order.GrandTotal > FreeShippingThreshold)
             .Sum(order => order.GrandTotal);
