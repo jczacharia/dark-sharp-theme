@@ -1,6 +1,7 @@
 .vscode/**
 .github/**
 .pi/**
+.superpowers/**
 docs/**
 images/**
 samples/**
