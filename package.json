@@ -42,16 +42,6 @@
         "label": "Dark Sharp",
         "uiTheme": "vs-dark",
         "path": "./themes/dark-sharp-color-theme.json"
-      },
-      {
-        "label": "Dark Sharp 1",
-        "uiTheme": "vs-dark",
-        "path": "./themes/dark-sharp-1-color-theme.json"
-      },
-      {
-        "label": "Dark Sharp 2",
-        "uiTheme": "vs-dark",
-        "path": "./themes/dark-sharp-2-color-theme.json"
       }
     ]
   },
