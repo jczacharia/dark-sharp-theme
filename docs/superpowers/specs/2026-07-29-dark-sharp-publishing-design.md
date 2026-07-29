@@ -7,6 +7,10 @@
 
 Rename the `jomby-theme` extension to **Dark Sharp**, make the repo a clean, modern VS Code theme repo, and automate publishing to the Visual Studio Marketplace (`jczacharia.dark-sharp-theme`) and Open VSX on every main-branch push, publishing only when the version changes.
 
+## Positioning
+
+Dark Sharp targets **Angular and .NET developers**: full semantic color tokens with shared color customizations between C#/.NET and Angular/TypeScript. The theme was designed and scrutinized specifically for Angular templates (separate-file and inline) so Angular concepts are easy to identify — semantic HTML vs Angular input/attribute bindings and similar constructs are visually discernible. This positioning drives the marketplace description, keywords, and README.
+
 ## Decisions (settled with user)
 
 | Decision | Choice |
@@ -30,14 +34,14 @@ Rename the `jomby-theme` extension to **Dark Sharp**, make the repo a clean, mod
 {
   "name": "dark-sharp-theme",
   "displayName": "Dark Sharp",
-  "description": "A sharp, high-contrast dark theme for VS Code.",
+  "description": "A sharp dark theme built for Angular and .NET developers — full semantic token support with consistent colors across C# and Angular templates.",
   "version": "1.0.0",
   "publisher": "jczacharia",
   "license": "MIT",
   "icon": "icon.png",
   "engines": { "vscode": "^1.0.0" },
   "categories": ["Themes"],
-  "keywords": ["theme", "dark", "dark theme", "color-theme", "sharp", "high contrast"],
+  "keywords": ["theme", "dark", "dark theme", "color-theme", "sharp", "angular", "dotnet", ".net", "csharp", "c#", "semantic", "semantic tokens", "typescript"],
   "galleryBanner": { "color": "<theme editor.background>", "theme": "dark" },
   "pricing": "Free",
   "repository": { "type": "git", "url": "https://github.com/jczacharia/dark-sharp-theme" },
@@ -64,7 +68,11 @@ Notes:
 ### 3. Files added
 
 - `LICENSE` — MIT, copyright Jeremy C. Zacharia.
-- `README.md` — replaces boilerplate: what the theme is, screenshot section pointing at `images/*.png` (user adds screenshots later; publish works without them), install instructions (Marketplace, Open VSX, manual VSIX), link to repo/issues.
+- `README.md` — replaces boilerplate. Content, leading with the theme's positioning:
+  - **Who it's for**: Angular and .NET developers wanting full semantic color tokens and shared color customizations across both stacks.
+  - **What's distinctive**: designed and scrutinized for Angular templates — both separate-file and inline templates — so Angular concepts read at a glance: semantic HTML vs Angular input/attribute bindings, and similar template constructs are visually distinct. Consistent semantic coloring between C#/.NET and Angular/TypeScript code.
+  - Screenshot section pointing at `images/*.png` (user adds screenshots later — ideally one C# file and one Angular template; publish works without them).
+  - Install instructions (Marketplace, Open VSX, manual VSIX); recommended settings note if semantic highlighting must be enabled; link to repo/issues.
 - `CHANGELOG.md` — Keep-a-Changelog format, `## [1.0.0] - <release date>` initial entry.
 - `icon.png` — 256×256 PNG, simple geometric mark generated from the theme's palette (ImageMagick). Placeholder quality; swappable anytime. SVG is not allowed by the Marketplace.
 - `.github/workflows/publish.yml` — see §5.
