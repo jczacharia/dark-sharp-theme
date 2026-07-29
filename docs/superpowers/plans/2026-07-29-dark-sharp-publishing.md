@@ -15,7 +15,8 @@
 - License: MIT, copyright `Jeremy C. Zacharia`.
 - Theme **colors must not change** — only the file is renamed and a `"name"` field added.
 - Screenshot output filenames (README depends on them): `images/csharp.png`, `images/angular-inline.png`, `images/angular-template.png`.
-- Node ≥ 20 required (local machine has v24).
+- Node ≥ 20 required (local machine has v24; Angular 22 samples need Node `^22.22 || ^24.13.1` — satisfied).
+- Angular samples use **the latest Angular major — 22 at time of provisioning** (`^22.0.0`, TypeScript `~6.0.0`, no zone.js).
 - **DO NOT `git push` until Task 8.** The GitHub repo already has `VSCE_PAT`/`OVSX_PAT` secrets; once the workflow file lands on `origin/main`, any push can publish for real. All tasks commit locally only.
 - Repo root: `/home/jcz/dev/vscode/dark-sharp-theme`. Commit messages end with `Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>`.
 
@@ -273,6 +274,41 @@ A sharp dark theme for VS Code, built for **Angular** and **.NET** developers �
 full semantic color tokens with consistent, shared color customizations across
 C# and Angular/TypeScript.
 
+## Get set up in 60 seconds
+
+1. **Install the theme:** press `Ctrl+P`, run `ext install jczacharia.dark-sharp-theme`
+   (or grab it from the
+   [Marketplace](https://marketplace.visualstudio.com/items?itemName=jczacharia.dark-sharp-theme) /
+   [Open VSX](https://open-vsx.org/extension/jczacharia/dark-sharp-theme)),
+   then **Preferences: Color Theme** → **Dark Sharp**.
+
+2. **Install the language extensions** that produce the semantic tokens Dark
+   Sharp colors:
+
+   | Stack | Extension | Notes |
+   | --- | --- | --- |
+   | Angular | [Angular Language Service](https://marketplace.visualstudio.com/items?itemName=Angular.ng-template) (`Angular.ng-template`) | Inline **and** separate-file templates, zero config |
+   | C# / .NET | [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp) (`ms-dotnettools.csharp`) | Ships the Roslyn language server that provides C# semantic tokens |
+
+   [C# Dev Kit](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit)
+   is optional — it adds solution explorer and test tooling on top of the C#
+   extension, not highlighting.
+   [C# by ReSharper](https://marketplace.visualstudio.com/items?itemName=JetBrains.resharper-code)
+   works too, but it uses its own analysis engine — the stock C# extension is
+   what Dark Sharp is tuned against.
+
+3. **Add to your `settings.json`:**
+
+   ```json
+   "editor.semanticHighlighting.enabled": true
+   ```
+
+   Dark Sharp already opts into semantic highlighting on its own
+   (`"semanticHighlighting": true` in the theme), so this line is a guarantee —
+   it re-enables semantic tokens if another profile or setting turned them off.
+
+That's it. No other settings are needed for either stack.
+
 ## Why Dark Sharp
 
 - **Semantic tokens first.** Colors are driven by semantic tokens from the
@@ -300,20 +336,6 @@ C# and Angular/TypeScript.
 ### Angular — separate template
 
 ![Angular separate-file template](images/angular-template.png)
-
-## Installation
-
-- **VS Code:** install from the
-  [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=jczacharia.dark-sharp-theme),
-  or press `Ctrl+P` and run `ext install jczacharia.dark-sharp-theme`.
-- **Cursor / Windsurf / VSCodium:** install from
-  [Open VSX](https://open-vsx.org/extension/jczacharia/dark-sharp-theme).
-
-Then open **Preferences: Color Theme** and pick **Dark Sharp**.
-
-Semantic highlighting is on by default in VS Code. If you have disabled it,
-re-enable `"editor.semanticHighlighting.enabled": true` to get the full
-effect.
 
 ## Development
 
@@ -547,6 +569,8 @@ public class OrderService(IOrderRepository repository)
 
 - [ ] **Step 2: Create the Angular project scaffolding**
 
+Use **the latest Angular major — 22 at time of provisioning** (TypeScript peer range `>=6.0 <6.1`; zone.js is not needed — optional peer, zoneless is the default; the Angular Language Service extension bundles its own compiler, so `@angular/compiler-cli` is not needed either).
+
 `samples/angular/package.json`:
 
 ```json
@@ -554,16 +578,12 @@ public class OrderService(IOrderRepository repository)
   "name": "dark-sharp-angular-sample",
   "private": true,
   "dependencies": {
-    "@angular/common": "^20.0.0",
-    "@angular/compiler": "^20.0.0",
-    "@angular/core": "^20.0.0",
-    "@angular/platform-browser": "^20.0.0",
-    "rxjs": "^7.8.0",
-    "zone.js": "^0.15.0"
+    "@angular/common": "^22.0.0",
+    "@angular/core": "^22.0.0",
+    "rxjs": "^7.8.0"
   },
   "devDependencies": {
-    "@angular/compiler-cli": "^20.0.0",
-    "typescript": "~5.8.0"
+    "typescript": "~6.0.0"
   }
 }
 ```
@@ -590,33 +610,40 @@ public class OrderService(IOrderRepository repository)
 
 - [ ] **Step 3: Create the Angular components**
 
-`samples/angular/src/inline-badge.component.ts` — inline template exercising the concepts the theme discerns (semantic HTML vs input bindings vs attribute bindings, control flow, interpolation, signals):
+Design intent: condense maximum modern template syntax into screenshot-sized components, with **semantic HTML elements carrying native/ARIA attributes and Angular `[input]`/`[attr.x]`/`(event)` bindings on the same element** — the discernment the theme was tuned for. Coverage across the two components: interpolation, property/attribute/class/style bindings, event bindings, two-way `[(expanded)]` with `model()`, template reference variables, `@if/@else` (incl. `; as`), `@for` with `track` + `$index`, `@switch/@case/@default`, `@defer/@placeholder` with triggers, `@let`, pipes with args, host bindings, and the signal APIs (`input()`, `input.required()`, `output()`, `model()`, `viewChild()`, `computed()`, `signal()`).
+
+`samples/angular/src/inline-badge.component.ts` — the **inline-template** screenshot (TS class + template in one frame; the TS side is where TypeScript's semantic tokens shine):
 
 ```typescript
-import { Component, computed, input, output } from '@angular/core';
+import { Component, ElementRef, computed, input, model, output, viewChild } from '@angular/core';
+import { TitleCasePipe } from '@angular/common';
 
 export type BadgeTone = 'info' | 'success' | 'warning';
 
 @Component({
   selector: 'app-inline-badge',
-  standalone: true,
+  imports: [TitleCasePipe],
+  host: { '[class.expanded]': 'expanded()' },
   template: `
     <section class="badges" [attr.aria-label]="label()">
       <header>
         <h2>{{ label() }}</h2>
+        <button type="button" [attr.aria-expanded]="expanded()" (click)="expanded.set(!expanded())">
+          {{ expanded() ? 'Collapse' : 'Expand' }}
+        </button>
         <button type="button" (click)="dismissed.emit()">Dismiss</button>
       </header>
-      @if (count() > 0) {
-        <ul [class.compact]="count() > 5">
+      @if (expanded()) {
+        <ul #list [class.compact]="count() > 5">
           @for (tone of tones(); track tone) {
             <li [attr.data-tone]="tone" [title]="tone">
-              <strong>{{ tone }}</strong>
-              <span>{{ count() }} active</span>
+              <strong>{{ tone | titlecase }}</strong>
+              <output>{{ count() }} active</output>
             </li>
           }
         </ul>
       } @else {
-        <p>No badges to show.</p>
+        <p>{{ count() }} hidden badges.</p>
       }
     </section>
   `,
@@ -624,7 +651,10 @@ export type BadgeTone = 'info' | 'success' | 'warning';
 export class InlineBadgeComponent {
   label = input.required<string>();
   count = input(0);
+  expanded = model(false);
   dismissed = output<void>();
+
+  list = viewChild<ElementRef<HTMLUListElement>>('list');
 
   tones = computed<BadgeTone[]>(() =>
     this.count() > 3 ? ['warning', 'info'] : ['success'],
@@ -632,70 +662,106 @@ export class InlineBadgeComponent {
 }
 ```
 
-`samples/angular/src/task-list.component.ts`:
+`samples/angular/src/task-list.component.ts` (not screenshotted itself — it backs the separate-template shot):
 
 ```typescript
-import { Component, input, output, signal } from '@angular/core';
+import { Component, computed, input, output, signal } from '@angular/core';
+import { DatePipe, TitleCasePipe, UpperCasePipe } from '@angular/common';
+import { InlineBadgeComponent } from './inline-badge.component';
+
+export type TaskStatus = 'all' | 'open' | 'done';
 
 export interface TaskItem {
   id: number;
   title: string;
   done: boolean;
+  priority: 'low' | 'high';
   dueDate?: string;
 }
 
 @Component({
   selector: 'app-task-list',
-  standalone: true,
+  imports: [DatePipe, TitleCasePipe, UpperCasePipe, InlineBadgeComponent],
   templateUrl: './task-list.component.html',
 })
 export class TaskListComponent {
   tasks = input.required<TaskItem[]>();
-  heading = input('Open tasks');
+  heading = input('Task Board');
+  compact = input(false);
+  loading = input(false);
   toggled = output<TaskItem>();
 
-  filter = signal<'all' | 'open'>('open');
+  query = signal('');
+  filter = signal<TaskStatus>('open');
+  showBadges = signal(false);
+  today = signal(new Date().toISOString());
+  statuses: readonly TaskStatus[] = ['all', 'open', 'done'];
 
-  visible(): TaskItem[] {
-    const tasks = this.tasks();
-    return this.filter() === 'all' ? tasks : tasks.filter((t) => !t.done);
-  }
+  isOverdue = (task: TaskItem): boolean =>
+    !task.done && task.dueDate != null && task.dueDate < this.today();
+
+  visible = computed(() => {
+    const query = this.query().toLowerCase();
+    return this.tasks()
+      .filter((task) => this.filter() === 'all' || task.done === (this.filter() === 'done'))
+      .filter((task) => task.title.toLowerCase().includes(query));
+  });
 }
 ```
 
-`samples/angular/src/task-list.component.html`:
+`samples/angular/src/task-list.component.html` — the **separate-template** screenshot:
 
 ```html
-<article class="task-list" [attr.aria-busy]="visible().length === 0">
+@let overdue = tasks().filter(isOverdue);
+
+<article class="board" [class.compact]="compact()" [attr.aria-busy]="loading()">
   <header>
-    <h1>{{ heading() }}</h1>
-    <nav aria-label="Filters">
-      <button type="button" [class.active]="filter() === 'open'" (click)="filter.set('open')">
-        Open
-      </button>
-      <button type="button" [class.active]="filter() === 'all'" (click)="filter.set('all')">
-        All
-      </button>
-    </nav>
+    <h1>{{ heading() | uppercase }}</h1>
+    <time [attr.datetime]="today()" [style.opacity]="loading() ? 0.5 : 1">
+      {{ today() | date: 'EEEE, MMM d' }}
+    </time>
+    <input #search type="search" placeholder="Filter tasks…"
+      [value]="query()" (input)="query.set(search.value)" (keydown.escape)="search.blur()" />
   </header>
 
-  @if (visible().length > 0) {
-    <ol>
-      @for (task of visible(); track task.id) {
-        <li [class.done]="task.done">
-          <label>
-            <input type="checkbox" [checked]="task.done" (change)="toggled.emit(task)" />
-            <span>{{ task.title }}</span>
-          </label>
-          @if (task.dueDate) {
-            <time [attr.datetime]="task.dueDate">due {{ task.dueDate }}</time>
-          }
-        </li>
-      }
-    </ol>
-  } @else {
-    <p>Nothing to do — enjoy the silence.</p>
+  <nav aria-label="Status filters">
+    @for (status of statuses; track status) {
+      <button type="button" [class.active]="filter() === status"
+        [attr.aria-pressed]="filter() === status" (click)="filter.set(status)">
+        {{ status | titlecase }}
+      </button>
+    }
+  </nav>
+
+  @switch (visible().length) {
+    @case (0) {
+      <p role="status">Nothing matches “{{ query() }}”.</p>
+    }
+    @default {
+      <ol>
+        @for (task of visible(); track task.id; let i = $index) {
+          <li [class.done]="task.done" [attr.data-priority]="task.priority">
+            <label>
+              <input type="checkbox" [checked]="task.done" (change)="toggled.emit(task)" />
+              <strong>{{ i + 1 }}</strong> {{ task.title }}
+            </label>
+            @if (task.dueDate; as due) {
+              <time [attr.datetime]="due">due {{ due | date: 'MMM d' }}</time>
+            }
+          </li>
+        }
+      </ol>
+    }
   }
+
+  <footer>
+    @defer (on viewport; prefetch on idle) {
+      <app-inline-badge label="Overdue" [count]="overdue.length"
+        [(expanded)]="showBadges" (dismissed)="filter.set('open')" />
+    } @placeholder {
+      <p>{{ overdue.length }} overdue — scroll for details.</p>
+    }
+  </footer>
 </article>
 ```
 
@@ -805,6 +871,7 @@ writeFileSync(
       'window.commandCenter': false,
       'chat.commandCenter.enabled': false,
       'editor.minimap.enabled': false,
+      'editor.fontSize': 13,
       'breadcrumbs.enabled': false,
       'editor.scrollBeyondLastLine': false,
       'editor.cursorBlinking': 'solid',
@@ -835,7 +902,7 @@ const app = await _electron.launch({
 });
 const page = await app.firstWindow();
 const browserWindow = await app.browserWindow(page);
-await browserWindow.evaluate((win) => win.setSize(1600, 1000));
+await browserWindow.evaluate((win) => win.setSize(1500, 1250)); // tall enough for the ~55-line template sample
 await page.waitForTimeout(8_000);
 await page.keyboard.press('Control+b'); // close the (default-open) sidebar
 
