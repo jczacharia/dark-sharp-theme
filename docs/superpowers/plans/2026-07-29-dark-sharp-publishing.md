@@ -6,7 +6,7 @@
 
 **Architecture:** Pure-data VS Code theme extension (no build step). One GitHub Actions workflow using `HaaLeo/publish-vscode-extension@v2` with `skipDuplicate` publishes both registries. A local-only Node script drives desktop VS Code via Playwright's Electron driver against a `samples/` workspace (C# + Angular) to capture README screenshots with real language servers running.
 
-**Tech Stack:** VS Code theme JSON, GitHub Actions, `@vscode/vsce`, `@vscode/test-electron`, Playwright (Electron), ImageMagick, .NET SDK 10, Angular 20.
+**Tech Stack:** VS Code theme JSON, GitHub Actions, `@vscode/vsce`, `@vscode/test-electron`, Playwright (Electron), ImageMagick, .NET SDK 10, Angular 22.
 
 ## Global Constraints
 
@@ -15,7 +15,7 @@
 - License: MIT, copyright `Jeremy C. Zacharia`.
 - Theme **colors must not change** — only the file is renamed and a `"name"` field added.
 - Screenshot output filenames (README depends on them): `images/csharp.png`, `images/angular-inline.png`, `images/angular-template.png`.
-- Node ≥ 20 required (local machine has v24; Angular 22 samples need Node `^22.22 || ^24.13.1` — satisfied).
+- Node ≥ 22 required (local machine has v24; Angular 22 samples need Node `^22.22 || ^24.13.1` — satisfied).
 - Angular samples use **the latest Angular major — 22 at time of provisioning** (`^22.0.0`, TypeScript `~6.0.0`, no zone.js).
 - **DO NOT `git push` until Task 8.** The GitHub repo already has `VSCE_PAT`/`OVSX_PAT` secrets; once the workflow file lands on `origin/main`, any push can publish for real. All tasks commit locally only.
 - Repo root: `/home/jcz/dev/vscode/dark-sharp-theme`. Commit messages end with `Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>`.
@@ -25,12 +25,14 @@
 ### Task 1: Repo cleanup and rename
 
 **Files:**
+
 - Delete: `jomby-theme-0.0.1.vsix` … `jomby-theme-0.0.5.vsix`, `themes/Jomby.icls`, `vsc-extension-quickstart.md`
 - Rename: `themes/Jomby-color-theme.json` → `themes/dark-sharp-color-theme.json`
 - Modify: `.gitignore`
 - Modify: git remote URL (repo config, not a file)
 
 **Interfaces:**
+
 - Produces: `themes/dark-sharp-color-theme.json` (path used by Task 2's `package.json`).
 
 - [ ] **Step 1: Delete stray artifacts and rename the theme file**
@@ -85,11 +87,13 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 ### Task 2: Manifest rewrite and theme label
 
 **Files:**
+
 - Modify: `package.json` (full rewrite)
 - Modify: `themes/dark-sharp-color-theme.json` (add one field)
 - Modify: `.vscodeignore` (full rewrite)
 
 **Interfaces:**
+
 - Consumes: `themes/dark-sharp-color-theme.json` from Task 1.
 - Produces: theme label `Dark Sharp` (Task 7's settings reference it as `workbench.colorTheme`); npm script `screenshots` (implemented in Task 7); devDependencies used by Task 7.
 
@@ -109,9 +113,7 @@ Replace the entire file with:
   "engines": {
     "vscode": "^1.0.0"
   },
-  "categories": [
-    "Themes"
-  ],
+  "categories": ["Themes"],
   "keywords": [
     "theme",
     "dark",
@@ -210,11 +212,13 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 ### Task 3: LICENSE, CHANGELOG, README
 
 **Files:**
+
 - Create: `LICENSE`
 - Modify: `CHANGELOG.md` (full rewrite)
 - Modify: `README.md` (full rewrite)
 
 **Interfaces:**
+
 - Produces: README image references `images/csharp.png`, `images/angular-inline.png`, `images/angular-template.png` (created by Task 7 — broken links until then, resolved before the Task 8 push).
 
 - [ ] **Step 1: Create `LICENSE`**
@@ -267,7 +271,7 @@ follows [Keep a Changelog](https://keepachangelog.com/); versions follow
 
 - [ ] **Step 3: Rewrite `README.md`**
 
-```markdown
+````markdown
 # Dark Sharp
 
 A sharp dark theme for VS Code, built for **Angular** and **.NET** developers —
@@ -285,10 +289,10 @@ C# and Angular/TypeScript.
 2. **Install the language extensions** that produce the semantic tokens Dark
    Sharp colors:
 
-   | Stack | Extension | Notes |
-   | --- | --- | --- |
-   | Angular | [Angular Language Service](https://marketplace.visualstudio.com/items?itemName=Angular.ng-template) (`Angular.ng-template`) | Inline **and** separate-file templates, zero config |
-   | C# / .NET | [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp) (`ms-dotnettools.csharp`) | Ships the Roslyn language server that provides C# semantic tokens |
+   | Stack     | Extension                                                                                                                   | Notes                                                             |
+   | --------- | --------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+   | Angular   | [Angular Language Service](https://marketplace.visualstudio.com/items?itemName=Angular.ng-template) (`Angular.ng-template`) | Inline **and** separate-file templates, zero config               |
+   | C# / .NET | [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp) (`ms-dotnettools.csharp`)                   | Ships the Roslyn language server that provides C# semantic tokens |
 
    [C# Dev Kit](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit)
    is optional — it adds solution explorer and test tooling on top of the C#
@@ -302,10 +306,11 @@ C# and Angular/TypeScript.
    ```json
    "editor.semanticHighlighting.enabled": true
    ```
+````
 
-   Dark Sharp already opts into semantic highlighting on its own
-   (`"semanticHighlighting": true` in the theme), so this line is a guarantee —
-   it re-enables semantic tokens if another profile or setting turned them off.
+Dark Sharp already opts into semantic highlighting on its own
+(`"semanticHighlighting": true` in the theme), so this line is a guarantee —
+it re-enables semantic tokens if another profile or setting turned them off.
 
 That's it. No other settings are needed for either stack.
 
@@ -339,7 +344,7 @@ That's it. No other settings are needed for either stack.
 
 ## Development
 
-Screenshots are generated automatically (requires Node ≥ 20 and the .NET SDK):
+Screenshots are generated automatically (requires Node ≥ 22 and the .NET SDK):
 
 ```bash
 npm install
@@ -353,13 +358,14 @@ semantic highlighting to settle, and writes PNGs to `images/`.
 ## License
 
 [MIT](LICENSE)
-```
+
+````
 
 - [ ] **Step 4: Verify no template text remains**
 
 ```bash
 grep -ri "quickstart\|jomby\|Working with Markdown" README.md CHANGELOG.md LICENSE || echo CLEAN
-```
+````
 
 Expected: `CLEAN`.
 
@@ -377,9 +383,11 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 ### Task 4: Icon and package validation
 
 **Files:**
+
 - Create: `icon.png` (256×256, generated with ImageMagick)
 
 **Interfaces:**
+
 - Consumes: `package.json` (`"icon": "icon.png"`) from Task 2; LICENSE/README from Task 3.
 - Produces: a `.vsix` that packages cleanly — the gate for everything before it.
 
@@ -435,9 +443,11 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 ### Task 5: Publish workflow
 
 **Files:**
+
 - Create: `.github/workflows/publish.yml`
 
 **Interfaces:**
+
 - Consumes: repo secrets `VSCE_PAT` and `OVSX_PAT` (already configured on GitHub by the user).
 - Produces: auto-publish on main push, skipped when the version already exists.
 
@@ -455,7 +465,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
       - name: Publish to Open VSX
         id: publishToOpenVSX
         uses: HaaLeo/publish-vscode-extension@v2
@@ -493,6 +503,7 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 ### Task 6: Sample workspace for screenshots
 
 **Files:**
+
 - Create: `samples/csharp/Sample.csproj`
 - Create: `samples/csharp/Sample.cs`
 - Create: `samples/angular/package.json`
@@ -502,6 +513,7 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 - Create: `samples/angular/src/task-list.component.html`
 
 **Interfaces:**
+
 - Produces: the three files Task 7 opens and screenshots: `csharp/Sample.cs`, `angular/src/inline-badge.component.ts`, `angular/src/task-list.component.html`.
 
 - [ ] **Step 1: Create the C# project**
@@ -615,15 +627,15 @@ Design intent: condense maximum modern template syntax into screenshot-sized com
 `samples/angular/src/inline-badge.component.ts` — the **inline-template** screenshot (TS class + template in one frame; the TS side is where TypeScript's semantic tokens shine):
 
 ```typescript
-import { Component, ElementRef, computed, input, model, output, viewChild } from '@angular/core';
-import { TitleCasePipe } from '@angular/common';
+import {Component, ElementRef, computed, input, model, output, viewChild} from '@angular/core';
+import {TitleCasePipe} from '@angular/common';
 
 export type BadgeTone = 'info' | 'success' | 'warning';
 
 @Component({
   selector: 'app-inline-badge',
   imports: [TitleCasePipe],
-  host: { '[class.expanded]': 'expanded()' },
+  host: {'[class.expanded]': 'expanded()'},
   template: `
     <section class="badges" [attr.aria-label]="label()">
       <header>
@@ -656,18 +668,16 @@ export class InlineBadgeComponent {
 
   list = viewChild<ElementRef<HTMLUListElement>>('list');
 
-  tones = computed<BadgeTone[]>(() =>
-    this.count() > 3 ? ['warning', 'info'] : ['success'],
-  );
+  tones = computed<BadgeTone[]>(() => (this.count() > 3 ? ['warning', 'info'] : ['success']));
 }
 ```
 
 `samples/angular/src/task-list.component.ts` (not screenshotted itself — it backs the separate-template shot):
 
 ```typescript
-import { Component, computed, input, output, signal } from '@angular/core';
-import { DatePipe, TitleCasePipe, UpperCasePipe } from '@angular/common';
-import { InlineBadgeComponent } from './inline-badge.component';
+import {Component, computed, input, output, signal} from '@angular/core';
+import {DatePipe, TitleCasePipe, UpperCasePipe} from '@angular/common';
+import {InlineBadgeComponent} from './inline-badge.component';
 
 export type TaskStatus = 'all' | 'open' | 'done';
 
@@ -697,8 +707,7 @@ export class TaskListComponent {
   today = signal(new Date().toISOString());
   statuses: readonly TaskStatus[] = ['all', 'open', 'done'];
 
-  isOverdue = (task: TaskItem): boolean =>
-    !task.done && task.dueDate != null && task.dueDate < this.today();
+  isOverdue = (task: TaskItem): boolean => !task.done && task.dueDate != null && task.dueDate < this.today();
 
   visible = computed(() => {
     const query = this.query().toLowerCase();
@@ -717,49 +726,59 @@ export class TaskListComponent {
 <article class="board" [class.compact]="compact()" [attr.aria-busy]="loading()">
   <header>
     <h1>{{ heading() | uppercase }}</h1>
-    <time [attr.datetime]="today()" [style.opacity]="loading() ? 0.5 : 1">
-      {{ today() | date: 'EEEE, MMM d' }}
-    </time>
-    <input #search type="search" placeholder="Filter tasks…"
-      [value]="query()" (input)="query.set(search.value)" (keydown.escape)="search.blur()" />
+    <time [attr.datetime]="today()" [style.opacity]="loading() ? 0.5 : 1">{{ today() | date: 'EEEE, MMM d' }}</time>
+    <input
+      #search
+      type="search"
+      placeholder="Filter tasks…"
+      [value]="query()"
+      (input)="query.set(search.value)"
+      (keydown.escape)="search.blur()"
+    />
   </header>
 
   <nav aria-label="Status filters">
     @for (status of statuses; track status) {
-      <button type="button" [class.active]="filter() === status"
-        [attr.aria-pressed]="filter() === status" (click)="filter.set(status)">
-        {{ status | titlecase }}
-      </button>
+    <button
+      type="button"
+      [class.active]="filter() === status"
+      [attr.aria-pressed]="filter() === status"
+      (click)="filter.set(status)"
+    >
+      {{ status | titlecase }}
+    </button>
     }
   </nav>
 
-  @switch (visible().length) {
-    @case (0) {
-      <p role="status">Nothing matches “{{ query() }}”.</p>
+  @switch (visible().length) { @case (0) {
+  <p role="status">Nothing matches “{{ query() }}”.</p>
+  } @default {
+  <ol>
+    @for (task of visible(); track task.id; let i = $index) {
+    <li [class.done]="task.done" [attr.data-priority]="task.priority">
+      <label>
+        <input type="checkbox" [checked]="task.done" (change)="toggled.emit(task)" />
+        <strong>{{ i + 1 }}</strong>
+        {{ task.title }}
+      </label>
+      @if (task.dueDate; as due) {
+      <time [attr.datetime]="due">due {{ due | date: 'MMM d' }}</time>
+      }
+    </li>
     }
-    @default {
-      <ol>
-        @for (task of visible(); track task.id; let i = $index) {
-          <li [class.done]="task.done" [attr.data-priority]="task.priority">
-            <label>
-              <input type="checkbox" [checked]="task.done" (change)="toggled.emit(task)" />
-              <strong>{{ i + 1 }}</strong> {{ task.title }}
-            </label>
-            @if (task.dueDate; as due) {
-              <time [attr.datetime]="due">due {{ due | date: 'MMM d' }}</time>
-            }
-          </li>
-        }
-      </ol>
-    }
-  }
+  </ol>
+  } }
 
   <footer>
     @defer (on viewport; prefetch on idle) {
-      <app-inline-badge label="Overdue" [count]="overdue.length"
-        [(expanded)]="showBadges" (dismissed)="filter.set('open')" />
+    <app-inline-badge
+      label="Overdue"
+      [count]="overdue.length"
+      [(expanded)]="showBadges"
+      (dismissed)="filter.set('open')"
+    />
     } @placeholder {
-      <p>{{ overdue.length }} overdue — scroll for details.</p>
+    <p>{{ overdue.length }} overdue — scroll for details.</p>
     }
   </footer>
 </article>
@@ -789,25 +808,24 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 ### Task 7: Screenshot automation script
 
 **Files:**
+
 - Create: `scripts/screenshots.mjs`
 - Create (output): `images/csharp.png`, `images/angular-inline.png`, `images/angular-template.png`
 
 **Interfaces:**
+
 - Consumes: theme label `Dark Sharp` (Task 2), sample files (Task 6), devDependencies + `screenshots` npm script (Task 2).
 - Produces: the three PNGs referenced by the README (Task 3).
 
 - [ ] **Step 1: Write `scripts/screenshots.mjs`**
 
 ```javascript
-import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import {
-  downloadAndUnzipVSCode,
-  resolveCliArgsFromVSCodeExecutablePath,
-} from '@vscode/test-electron';
-import { _electron } from 'playwright';
+import {execFileSync} from 'node:child_process';
+import {existsSync, mkdirSync, writeFileSync} from 'node:fs';
+import {dirname, join} from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {downloadAndUnzipVSCode, resolveCliArgsFromVSCodeExecutablePath} from '@vscode/test-electron';
+import {_electron} from 'playwright';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const WORKBENCH = join(ROOT, '.screenshot-workbench');
@@ -818,14 +836,14 @@ const SAMPLES = join(ROOT, 'samples');
 const TIMEOUT_MS = Number(process.env.SCREENSHOT_TIMEOUT_MS ?? 120_000);
 
 const SHOTS = [
-  { open: 'Sample.cs', out: 'csharp.png' },
-  { open: 'inline-badge.component.ts', out: 'angular-inline.png' },
-  { open: 'task-list.component.html', out: 'angular-template.png' },
+  {open: 'Sample.cs', out: 'csharp.png'},
+  {open: 'inline-badge.component.ts', out: 'angular-inline.png'},
+  {open: 'task-list.component.html', out: 'angular-template.png'},
 ];
 
-mkdirSync(IMAGES, { recursive: true });
-mkdirSync(join(USER_DATA, 'User'), { recursive: true });
-mkdirSync(EXT_DIR, { recursive: true });
+mkdirSync(IMAGES, {recursive: true});
+mkdirSync(join(USER_DATA, 'User'), {recursive: true});
+mkdirSync(EXT_DIR, {recursive: true});
 
 // 1. Package the current theme into the workbench dir.
 const vsix = join(WORKBENCH, 'dark-sharp-theme.vsix');
@@ -836,9 +854,9 @@ execFileSync('npx', ['@vscode/vsce', 'package', '-o', vsix], {
 
 // 2. Sample project dependencies (language servers need them for semantic tokens).
 if (!existsSync(join(SAMPLES, 'angular', 'node_modules'))) {
-  execFileSync('npm', ['install'], { cwd: join(SAMPLES, 'angular'), stdio: 'inherit' });
+  execFileSync('npm', ['install'], {cwd: join(SAMPLES, 'angular'), stdio: 'inherit'});
 }
-execFileSync('dotnet', ['restore'], { cwd: join(SAMPLES, 'csharp'), stdio: 'inherit' });
+execFileSync('dotnet', ['restore'], {cwd: join(SAMPLES, 'csharp'), stdio: 'inherit'});
 
 // 3. Download VS Code stable and install theme + language extensions into an isolated profile.
 const exe = await downloadAndUnzipVSCode('stable');
@@ -847,13 +865,18 @@ execFileSync(
   cli,
   [
     ...cliArgs,
-    '--user-data-dir', USER_DATA,
-    '--extensions-dir', EXT_DIR,
-    '--install-extension', vsix,
-    '--install-extension', 'ms-dotnettools.csharp',
-    '--install-extension', 'Angular.ng-template',
+    '--user-data-dir',
+    USER_DATA,
+    '--extensions-dir',
+    EXT_DIR,
+    '--install-extension',
+    vsix,
+    '--install-extension',
+    'ms-dotnettools.csharp',
+    '--install-extension',
+    'Angular.ng-template',
   ],
-  { stdio: 'inherit' },
+  {stdio: 'inherit'},
 );
 
 // 4. Deterministic, chrome-free frames.
@@ -892,8 +915,10 @@ writeFileSync(
 const app = await _electron.launch({
   executablePath: exe,
   args: [
-    '--user-data-dir', USER_DATA,
-    '--extensions-dir', EXT_DIR,
+    '--user-data-dir',
+    USER_DATA,
+    '--extensions-dir',
+    EXT_DIR,
     '--skip-welcome',
     '--skip-release-notes',
     '--disable-workspace-trust',
@@ -908,7 +933,7 @@ await page.keyboard.press('Control+b'); // close the (default-open) sidebar
 
 async function runCommand(name) {
   await page.keyboard.press('Control+Shift+p');
-  await page.keyboard.type(name, { delay: 30 });
+  await page.keyboard.type(name, {delay: 30});
   await page.waitForTimeout(400);
   await page.keyboard.press('Enter');
   await page.waitForTimeout(400);
@@ -917,7 +942,7 @@ async function runCommand(name) {
 let failed = false;
 for (const shot of SHOTS) {
   await page.keyboard.press('Control+p');
-  await page.keyboard.type(shot.open, { delay: 40 });
+  await page.keyboard.type(shot.open, {delay: 40});
   await page.waitForTimeout(600);
   await page.keyboard.press('Enter');
 
@@ -984,6 +1009,7 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 **Files:** none (git push + external verification).
 
 **Interfaces:**
+
 - Consumes: everything above; repo secrets `VSCE_PAT`/`OVSX_PAT` on GitHub.
 
 - [ ] **Step 1: Final pre-flight**

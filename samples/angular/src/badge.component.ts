@@ -1,12 +1,14 @@
-import { Component, ElementRef, computed, input, model, output, viewChild } from '@angular/core';
-import { TitleCasePipe } from '@angular/common';
+import {TitleCasePipe} from '@angular/common';
+import {Component, ElementRef, computed, input, model, output, viewChild} from '@angular/core';
 
 export type BadgeTone = 'info' | 'success' | 'warning';
 
 @Component({
-  selector: 'app-inline-badge',
+  selector: 'app-badge',
   imports: [TitleCasePipe],
-  host: { '[class.expanded]': 'expanded()' },
+  host: {
+    '[class.expanded]': 'expanded()',
+  },
   template: `
     <section class="badges" [attr.aria-label]="label()">
       <header>
@@ -17,7 +19,7 @@ export type BadgeTone = 'info' | 'success' | 'warning';
         <button type="button" (click)="dismissed.emit()">Dismiss</button>
       </header>
       @if (expanded()) {
-        <ul #list [class.compact]="count() > 5">
+        <ul #list [class.compact]="count() > 5.0">
           @for (tone of tones(); track tone) {
             <li [attr.data-tone]="tone" [title]="tone">
               <strong>{{ tone | titlecase }}</strong>
@@ -31,15 +33,11 @@ export type BadgeTone = 'info' | 'success' | 'warning';
     </section>
   `,
 })
-export class InlineBadgeComponent {
-  label = input.required<string>();
-  count = input(0);
-  expanded = model(false);
-  dismissed = output<void>();
-
-  list = viewChild<ElementRef<HTMLUListElement>>('list');
-
-  tones = computed<BadgeTone[]>(() =>
-    this.count() > 3 ? ['warning', 'info'] : ['success'],
-  );
+export class BadgeComponent {
+  readonly label = input.required<string>();
+  readonly count = input(0);
+  readonly expanded = model(false);
+  readonly dismissed = output<void>();
+  readonly list = viewChild<ElementRef<HTMLUListElement>>('list');
+  readonly tones = computed<BadgeTone[]>(() => (this.count() > 3 ? ['warning', 'info'] : ['success']));
 }

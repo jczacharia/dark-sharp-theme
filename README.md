@@ -15,10 +15,10 @@ C# and Angular/TypeScript.
 2. **Install the language extensions** that produce the semantic tokens Dark
    Sharp colors:
 
-   | Stack | Extension | Notes |
-   | --- | --- | --- |
-   | Angular | [Angular Language Service](https://marketplace.visualstudio.com/items?itemName=Angular.ng-template) (`Angular.ng-template`) | Inline **and** separate-file templates, zero config |
-   | C# / .NET | [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp) (`ms-dotnettools.csharp`) | Ships the Roslyn language server that provides C# semantic tokens |
+   | Stack     | Extension                                                                                                                   | Notes                                                             |
+   | --------- | --------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+   | Angular   | [Angular Language Service](https://marketplace.visualstudio.com/items?itemName=Angular.ng-template) (`Angular.ng-template`) | Inline **and** separate-file templates, zero config               |
+   | C# / .NET | [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp) (`ms-dotnettools.csharp`)                   | Ships the Roslyn language server that provides C# semantic tokens |
 
    [C# Dev Kit](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit)
    is optional — it adds solution explorer and test tooling on top of the C#
@@ -55,21 +55,17 @@ That's it. No other settings are needed for either stack.
 
 ## Screenshots
 
+### Angular
+
+![Angular component with inline template](images/angular.png)
+
 ### C\#
 
 ![C# with semantic highlighting](images/csharp.png)
 
-### Angular — inline template
-
-![Angular component with inline template](images/angular-inline.png)
-
-### Angular — separate template
-
-![Angular separate-file template](images/angular-template.png)
-
 ## Development
 
-Screenshots are generated automatically (requires Node ≥ 20 and the .NET SDK):
+Screenshots are generated automatically (requires Node ≥ 22 and the .NET SDK):
 
 ```bash
 npm install

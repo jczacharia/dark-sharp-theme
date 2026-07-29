@@ -13,19 +13,19 @@ Dark Sharp targets **Angular and .NET developers**: full semantic color tokens w
 
 ## Decisions (settled with user)
 
-| Decision | Choice |
-|---|---|
-| Release trigger | Push to main; publish only when `package.json` version is new (`skipDuplicate`) |
-| Registries | VS Marketplace **and** Open VSX (Cursor/Windsurf/VSCodium) |
-| Rename scope | Full: extension id, display name, theme picker label, theme filename |
-| First published version | `1.0.0` |
-| License | MIT |
-| JetBrains files (`Jomby.icls`) | Delete — repo is VS Code only |
-| Committed `.vsix` files | Delete and gitignore |
-| GitHub repo | Already renamed to `jczacharia/dark-sharp-theme`; update local remote URL |
-| Publisher account | Does not exist yet — manual setup steps below |
-| Workflow implementation | `HaaLeo/publish-vscode-extension@v2` (packages once, publishes to both registries, built-in duplicate-version skip) |
-| Showcase assets | Automated locally via Playwright (Electron) driving desktop VS Code; PNG screenshots only, run on demand, committed to `images/` |
+| Decision                       | Choice                                                                                                                           |
+| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------- |
+| Release trigger                | Push to main; publish only when `package.json` version is new (`skipDuplicate`)                                                  |
+| Registries                     | VS Marketplace **and** Open VSX (Cursor/Windsurf/VSCodium)                                                                       |
+| Rename scope                   | Full: extension id, display name, theme picker label, theme filename                                                             |
+| First published version        | `1.0.0`                                                                                                                          |
+| License                        | MIT                                                                                                                              |
+| JetBrains files (`Jomby.icls`) | Delete — repo is VS Code only                                                                                                    |
+| Committed `.vsix` files        | Delete and gitignore                                                                                                             |
+| GitHub repo                    | Already renamed to `jczacharia/dark-sharp-theme`; update local remote URL                                                        |
+| Publisher account              | Does not exist yet — manual setup steps below                                                                                    |
+| Workflow implementation        | `HaaLeo/publish-vscode-extension@v2` (packages once, publishes to both registries, built-in duplicate-version skip)              |
+| Showcase assets                | Automated locally via Playwright (Electron) driving desktop VS Code; PNG screenshots only, run on demand, committed to `images/` |
 
 ## Changes
 
@@ -40,21 +40,34 @@ Dark Sharp targets **Angular and .NET developers**: full semantic color tokens w
   "publisher": "jczacharia",
   "license": "MIT",
   "icon": "icon.png",
-  "engines": { "vscode": "^1.0.0" },
+  "engines": {"vscode": "^1.0.0"},
   "categories": ["Themes"],
-  "keywords": ["theme", "dark", "dark theme", "color-theme", "sharp", "angular", "dotnet", ".net", "csharp", "c#", "semantic", "semantic tokens", "typescript"],
-  "galleryBanner": { "color": "<theme editor.background>", "theme": "dark" },
+  "keywords": [
+    "theme",
+    "dark",
+    "dark theme",
+    "color-theme",
+    "sharp",
+    "angular",
+    "dotnet",
+    ".net",
+    "csharp",
+    "c#",
+    "semantic",
+    "semantic tokens",
+    "typescript"
+  ],
+  "galleryBanner": {"color": "<theme editor.background>", "theme": "dark"},
   "pricing": "Free",
-  "repository": { "type": "git", "url": "https://github.com/jczacharia/dark-sharp-theme" },
+  "repository": {"type": "git", "url": "https://github.com/jczacharia/dark-sharp-theme"},
   "contributes": {
-    "themes": [
-      { "label": "Dark Sharp", "uiTheme": "vs-dark", "path": "./themes/dark-sharp-color-theme.json" }
-    ]
+    "themes": [{"label": "Dark Sharp", "uiTheme": "vs-dark", "path": "./themes/dark-sharp-color-theme.json"}]
   }
 }
 ```
 
 Notes:
+
 - `engines.vscode: "^1.0.0"` — a pure color theme uses no extension API, so the loosest engine maximizes installability.
 - No `vscode:prepublish` script (nothing to build). devDependencies only for the local screenshot tooling (§9): `playwright`, `@vscode/test-electron`, `@vscode/vsce`; plus a `"screenshots"` npm script. The publish CI does not install dependencies — the HaaLeo action brings its own tooling.
 - `galleryBanner.color` = the theme's `editor.background` value, read from the theme JSON at implementation time.
@@ -105,7 +118,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
       - name: Publish to Open VSX
         id: publishToOpenVSX
         uses: HaaLeo/publish-vscode-extension@v2
@@ -135,7 +148,7 @@ Nothing publishes until these exist; code can land first. Steps:
 4. **Open VSX**: sign in at https://open-vsx.org with GitHub → sign the Eclipse publisher agreement (one-time) → Settings → Access Tokens → create token. Create the namespace: `npx ovsx create-namespace jczacharia -p <token>`.
 5. **GitHub secrets**: repo → Settings → Secrets and variables → Actions → add `VSCE_PAT` (step 2) and `OVSX_PAT` (step 4).
 
-**Maintenance note:** the Azure PAT expires in ≤1 year — set a reminder to rotate the `VSCE_PAT` secret. Microsoft retires *global* Azure DevOps PATs Dec 2026; marketplace-scoped PAT + GitHub Actions remains the working pattern for now, revisit before then.
+**Maintenance note:** the Azure PAT expires in ≤1 year — set a reminder to rotate the `VSCE_PAT` secret. Microsoft retires _global_ Azure DevOps PATs Dec 2026; marketplace-scoped PAT + GitHub Actions remains the working pattern for now, revisit before then.
 
 ### 7. Error handling / verification
 
@@ -156,9 +169,10 @@ Nothing publishes until these exist; code can land first. Steps:
 
 **Why local:** the theme's selling point is semantic tokens, which only appear when real language servers run (Roslyn for C#, Angular Language Service for templates). Those are desktop-only — browser VS Code (`vscode.dev` / `@vscode/test-web`) can't run them, and LSP warm-up timing makes CI runs flaky. So: an npm script (`npm run screenshots`) the user runs when the theme changes; outputs are committed.
 
-**Prerequisites (user's machine):** Node ≥ 20, .NET SDK (for Roslyn to light up the C# sample), internet (first run downloads a VS Code build and the two extensions).
+**Prerequisites (user's machine):** Node ≥ 22, .NET SDK (for Roslyn to light up the C# sample), internet (first run downloads a VS Code build and the two extensions).
 
 **Flow (`scripts/screenshots.mjs`):**
+
 1. Package the theme: `vsce package` → `.vsix`.
 2. Download a stable VS Code build via `@vscode/test-electron`'s `downloadAndUnzipVSCode()`; resolve its CLI path.
 3. Into a throwaway `.screenshot-workbench/` (fresh `--user-data-dir` + `--extensions-dir`): install the theme `.vsix`, `ms-dotnettools.csharp`, and `Angular.ng-template` via the VS Code CLI.

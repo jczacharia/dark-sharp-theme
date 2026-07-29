@@ -5,3 +5,4 @@ samples/**/bin/
 samples/**/obj/
 .env
 .pi
+.vscode-test
