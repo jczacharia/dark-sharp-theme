@@ -1,3 +1,7 @@
-node_modules
+node_modules/
 *.vsix
+.screenshot-workbench/
+samples/**/bin/
+samples/**/obj/
 .env
+.pi
