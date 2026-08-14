@@ -340,24 +340,20 @@
     },
     {
       "name": "Flow keywords return/await/yield pop pink (darkpp restored)",
-      "scope": "keyword.control.flow",
+      "scope": ["keyword.control.flow", "keyword.operator.expression.await"],
       "settings": {"foreground": "#CE93D8", "fontStyle": "italic"}
     },
-    {"scope": "keyword.operator", "settings": {"foreground": "#FFD54F"}},
     {
-      "scope": [
-        "keyword.operator.new",
-        "keyword.operator.expression",
-        "keyword.operator.cast",
-        "keyword.operator.sizeof",
-        "keyword.operator.alignof",
-        "keyword.operator.typeid",
-        "keyword.operator.alignas",
-        "keyword.operator.instanceof",
-        "keyword.operator.logical.python",
-        "keyword.operator.wordlike"
-      ],
+      "scope": ["keyword.operator"],
       "settings": {"foreground": "#FFD54F", "fontStyle": "italic"}
+    },
+    {
+      "scope": ["keyword.operator.arrow"],
+      "settings": {"fontStyle": ""}
+    },
+    {
+      "scope": ["keyword.operator.expression.nameof", "keyword.operator.expression.typeof"],
+      "settings": {"foreground": "#569CD6", "fontStyle": "italic"}
     },
     {
       "name": "Logical operators / optional chaining (darkpp restored)",
