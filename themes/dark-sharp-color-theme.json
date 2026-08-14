@@ -54,7 +54,7 @@
     // ── values / members ──
     "variable:csharp": {"foreground": "#9CDCFE"},
     "variable.readonly:csharp": {"foreground": "#4FC1FF"},
-    "parameter:csharp": {"foreground": "#9CDCFE", "italic": true},
+    "parameter:csharp": {"foreground": "#9CDCFE"},
     "field:csharp": {"foreground": "#9CDCFE", "bold": true},
     "field.readonly:csharp": {"foreground": "#4FC1FF", "bold": true},
     "constant:csharp": {"foreground": "#4FC1FF", "bold": true},
@@ -345,20 +345,29 @@
     },
     {
       "scope": ["keyword.operator"],
-      "settings": {"foreground": "#FFD54F", "fontStyle": "italic"}
+      "settings": {"foreground": "#FFD54F"}
     },
     {
       "scope": ["keyword.operator.arrow"],
       "settings": {"fontStyle": ""}
     },
     {
-      "scope": ["keyword.operator.expression.nameof", "keyword.operator.expression.typeof"],
+      "scope": [
+        "keyword.operator.expression.nameof",
+        "keyword.operator.expression.typeof",
+        "keyword.operator.expression.default",
+        "keyword.operator.expression.new"
+      ],
+      "settings": {"foreground": "#569CD6", "fontStyle": "italic"}
+    },
+    {
+      "scope": ["storage.type.accessor"],
       "settings": {"foreground": "#569CD6", "fontStyle": "italic"}
     },
     {
       "name": "Logical operators / optional chaining (darkpp restored)",
       "scope": ["keyword.operator.logical", "punctuation.accessor.optional"],
-      "settings": {"foreground": "#EC407A"}
+      "settings": {"foreground": "#EC407A", "fontStyle": ""}
     },
     {"scope": "keyword.other.unit", "settings": {"foreground": "#AEEA00"}},
     {
