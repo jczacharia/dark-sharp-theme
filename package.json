@@ -2,7 +2,7 @@
   "name": "dark-sharp-theme",
   "displayName": "Dark Sharp",
   "description": "A sharp dark theme built for Angular and .NET developers — full semantic token support with consistent colors across C# and Angular templates.",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "publisher": "jczacharia",
   "license": "MIT",
   "icon": "icon.png",

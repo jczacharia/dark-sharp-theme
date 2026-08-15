@@ -25,7 +25,7 @@
     // italic = compile-time / meta (incl. static: type-level, not instance-level)
     // bold = declaration / structural anchor · strikethrough = deprecated
     "*.deprecated": {"strikethrough": true},
-    "*.static": {"bold": true},
+    "*.static": {"italic": true},
     "*.defaultLibrary": {"italic": true},
 
     // ═══ Global (language-agnostic) ═══
@@ -48,7 +48,7 @@
     "interface:csharp": {"foreground": "#B8D7A3"},
     "enum:csharp": {"foreground": "#B8D7A3", "bold": true},
     "type:csharp": {"foreground": "#B8D7A3", "italic": true},
-    "typeParameter:csharp": {"foreground": "#D7BA7D"},
+    "typeParameter:csharp": {"foreground": "#D7BA7D", "italic": true},
     "delegate:csharp": {"foreground": "#FFECB3", "italic": true},
 
     // ── values / members ──
@@ -127,7 +127,7 @@
     "enum:typescript": {"foreground": "#B8D7A3", "bold": true},
     "enumMember:typescript": {"foreground": "#4EC9B0"},
     "type:typescript": {"foreground": "#B8D7A3", "italic": true},
-    "typeParameter:typescript": {"foreground": "#D7BA7D"},
+    "typeParameter:typescript": {"foreground": "#D7BA7D", "italic": true},
     "variable:typescript": {"foreground": "#9CDCFE"},
     "variable.readonly:typescript": {"foreground": "#4FC1FF"},
     "parameter:typescript": {"foreground": "#9CDCFE", "italic": true},
