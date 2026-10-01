@@ -3,33 +3,44 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DarkSharp.Samples;
 
-public enum OrderStatus { Pending, Shipped, Delivered, Cancelled }
+public enum OrderStatus
+{
+    Pending,
+    Shipped,
+    Delivered,
+    Cancelled,
+}
 
-public record OrderLine(string Sku, int Quantity, decimal UnitPrice)
+public abstract record OrderLine(string Sku, int Quantity, decimal UnitPrice)
 {
     public decimal Total => Quantity * UnitPrice;
 }
 
 public interface IOrderRepository
 {
-    Task<IReadOnlyList<Order>> GetByStatusAsync(OrderStatus status, CancellationToken ct = default);
+    Task<IReadOnlyList<OrderLine>> GetByStatusAsync(OrderStatus status, CancellationToken ct = default);
+    Task AddOrder<TOrderLine>(TOrderLine orderLine, CancellationToken ct = default) where TOrderLine : OrderLine;
 }
 
 public class Order
 {
-    [Required] public required Guid Id { get; init; }
-    [Required] public required string Customer { get; set; }
+    [Required]
+    public required Guid Id { get; init; }
+
+    [Required]
+    public required string Customer { get; set; }
     public OrderStatus Status { get; private set; } = OrderStatus.Pending;
     public ReadOnlyCollection<OrderLine> Lines { get; } = [];
 
     public decimal GrandTotal => Lines.Sum(line => line.Total);
 
-    public void Advance() => Status = Status switch
-    {
-        OrderStatus.Pending => OrderStatus.Shipped,
-        OrderStatus.Shipped => OrderStatus.Delivered,
-        var other => other,
-    };
+    public void Advance() =>
+        Status = Status switch
+        {
+            OrderStatus.Pending => OrderStatus.Shipped,
+            OrderStatus.Shipped => OrderStatus.Delivered,
+            var other => other,
+        };
 }
 
 public class OrderService(IOrderRepository repository)
@@ -39,8 +50,6 @@ public class OrderService(IOrderRepository repository)
     public async Task<decimal> OutstandingRevenueAsync(CancellationToken ct)
     {
         IReadOnlyList<Order> pending = await repository.GetByStatusAsync(OrderStatus.Pending, ct);
-        return pending
-            .Where(order => order.GrandTotal > FreeShippingThreshold)
-            .Sum(order => order.GrandTotal);
+        return pending.Where(order => order.GrandTotal > FreeShippingThreshold).Sum(order => order.GrandTotal);
     }
 }
