@@ -19,7 +19,8 @@ public abstract record OrderLine(string Sku, int Quantity, decimal UnitPrice)
 public interface IOrderRepository
 {
     Task<IReadOnlyList<OrderLine>> GetByStatusAsync(OrderStatus status, CancellationToken ct = default);
-    Task AddOrder<TOrderLine>(TOrderLine orderLine, CancellationToken ct = default) where TOrderLine : OrderLine;
+    Task AddOrder<TOrderLine>(TOrderLine orderLine, CancellationToken ct = default)
+        where TOrderLine : OrderLine;
 }
 
 public class Order
@@ -49,7 +50,7 @@ public class OrderService(IOrderRepository repository)
 
     public async Task<decimal> OutstandingRevenueAsync(CancellationToken ct)
     {
-        IReadOnlyList<Order> pending = await repository.GetByStatusAsync(OrderStatus.Pending, ct);
-        return pending.Where(order => order.GrandTotal > FreeShippingThreshold).Sum(order => order.GrandTotal);
+        IReadOnlyList<OrderLine> pending = await repository.GetByStatusAsync(OrderStatus.Pending, ct);
+        return pending.Where(order => order.Total > FreeShippingThreshold).Sum(order => order.Total);
     }
 }
