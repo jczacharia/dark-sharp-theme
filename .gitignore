@@ -6,3 +6,5 @@ node_modules/
 .pi
 .vscode-test
 .superpowers
+**/target/
+Cargo.lock

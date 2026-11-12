@@ -171,7 +171,8 @@
     "*.defaultLibrary": {"italic": true},
 
     // ═══ Global (language-agnostic) ═══
-    "namespace": {"foreground": "#DCDCDC"},
+    "namespace": {"foreground": "#999EAB"},
+    "generic": {"foreground": "#AFB4C1"},
     "module": {"foreground": "#DCDCDC"},
     "comment": {"foreground": "#757882"},
     "string": {"foreground": "#CDA48C"},
@@ -179,7 +180,7 @@
     "regexp": {"foreground": "#D16969"},
     "operator": {"foreground": "#FFD54F"},
     "keyword": {"foreground": "#569CD6"},
-    "label": {"foreground": "#DCDCDC"},
+    "label": {"foreground": "#DEDEDE"},
 
     // ═══ C# — Roslyn (cannot bleed into TS) ═══
     // ── types ──
@@ -277,7 +278,61 @@
     "property.readonly:typescript": {"foreground": "#4FC1FF"},
     "function:typescript": {"foreground": "#FFECB3"},
     "method:typescript": {"foreground": "#FFECB3"},
-    "decorator:typescript": {"foreground": "#FFECB3", "italic": true}
+    "decorator:typescript": {"foreground": "#FFECB3", "italic": true},
+
+    // ═══ Rust — rust-analyzer (roles mirror C#: struct≈class, trait≈interface) ═══
+    // rust-analyzer's default fallback maps *.mutable → markup.underline; kill it
+    "*.mutable:rust": {"underline": false},
+    // ── types ──
+    "struct:rust": {"foreground": "#4EC9B0"},
+    "union:rust": {"foreground": "#86C691"},
+    "enum:rust": {"foreground": "#D7BA7D", "bold": true},
+    "enumMember:rust": {"foreground": "#4EC9B0"},
+    "interface:rust": {"foreground": "#B8D7A3"},
+    "typeAlias:rust": {"foreground": "#B8D7A3", "italic": true},
+    "builtinType:rust": {"foreground": "#569CD6"},
+    "typeParameter:rust": {"foreground": "#86C691", "bold": true},
+    "constParameter:rust": {"foreground": "#4FC1FF", "bold": true},
+    "lifetime:rust": {"foreground": "#86C691", "italic": true},
+    "selfTypeKeyword:rust": {"foreground": "#4EC9B0", "italic": true},
+
+    // ── values / members ──
+    "variable:rust": {"foreground": "#9CDCFE"},
+    "parameter:rust": {"foreground": "#9CDCFE"},
+    "property:rust": {"foreground": "#9CDCFE"},
+    "const:rust": {"foreground": "#4FC1FF"},
+    "static:rust": {"foreground": "#4FC1FF"},
+    "selfKeyword:rust": {"foreground": "#569CD6", "italic": true},
+    "boolean:rust": {"foreground": "#FFAB40"},
+
+    // ── callables / metaprogramming (italic = compile-time) ──
+    "function:rust": {"foreground": "#FFECB3"},
+    "method:rust": {"foreground": "#FFECB3"},
+    "macro:rust": {"foreground": "#FFECB3", "italic": true},
+    "macroBang:rust": {"foreground": "#FFECB3", "italic": true},
+    "attribute:rust": {"foreground": "#FFECB3", "italic": true},
+    "attributeBracket:rust": {"foreground": "#FFECB3"},
+    "derive:rust": {"foreground": "#B8D7A3", "italic": true},
+    "deriveHelper:rust": {"foreground": "#9CDCFE", "italic": true},
+    "toolModule:rust": {"foreground": "#DCDCDC", "italic": true},
+
+    // ── keywords / operators ──
+    "keyword.controlFlow:rust": {"foreground": "#CE93D8", "italic": true},
+    "operator.controlFlow:rust": {"foreground": "#CE93D8", "bold": true},
+    "logical:rust": {"foreground": "#EC407A"},
+
+    // ── literals / docs ──
+    "escapeSequence:rust": {"foreground": "#D7BA7D"},
+    "invalidEscapeSequence:rust": {"foreground": "#F44747"},
+    "formatSpecifier:rust": {"foreground": "#CE93D8", "bold": true},
+    "comment.documentation:rust": {"foreground": "#8A8E99"},
+
+    // unsafe ops/calls/keyword flare pink — last so it wins specificity ties
+    "*.unsafe:rust": {"foreground": "#EC407A"},
+
+    // ═══ TOML — Even Better TOML / taplo (keys whose value is a table/array-of-tables) ═══
+    "tomlTableKey": {"foreground": "#4EC9B0"},
+    "tomlArrayKey": {"foreground": "#4EC9B0"}
   },
   "tokenColors": [
     // ═══════════════════════════════════════════════════════════════════
@@ -661,6 +716,69 @@
       "settings": {"foreground": "#FFECB3", "fontStyle": "italic"}
     },
     {"scope": "keyword.generator.asterisk", "settings": {"foreground": "#FFD54F"}},
-    {"scope": "storage.type.function.arrow", "settings": {"fontStyle": ""}}
+    {"scope": "storage.type.function.arrow", "settings": {"fontStyle": ""}},
+
+    // ═══════════════════════════════════════════════════════════════════
+    // Rust TextMate fallback (before rust-analyzer loads; mirrors semantic rules)
+    // ═══════════════════════════════════════════════════════════════════
+    {
+      "name": "Rust path/member access :: and . stay neutral (not operator gold)",
+      "scope": ["keyword.operator.namespace.rust", "keyword.operator.access.dot.rust"],
+      "settings": {"foreground": "#D4D4D4"}
+    },
+    {
+      "name": "Rust ? early-return operator",
+      "scope": "keyword.operator.question.rust",
+      "settings": {"foreground": "#CE93D8", "fontStyle": "bold"}
+    },
+    {
+      "name": "Rust lifetimes 'a",
+      "scope": ["entity.name.type.lifetime.rust", "punctuation.definition.lifetime.rust"],
+      "settings": {"foreground": "#86C691", "fontStyle": "italic"}
+    },
+    {
+      "name": "Rust primitive types",
+      "scope": ["entity.name.type.primitive.rust", "entity.name.type.numeric.rust"],
+      "settings": {"foreground": "#569CD6"}
+    },
+    {
+      "name": "Rust traits",
+      "scope": "entity.name.type.trait.rust",
+      "settings": {"foreground": "#B8D7A3"}
+    },
+    {
+      "name": "Rust enums",
+      "scope": "entity.name.type.enum.rust",
+      "settings": {"foreground": "#D7BA7D", "fontStyle": "bold"}
+    },
+    {
+      "name": "Rust macros",
+      "scope": ["entity.name.function.macro.rust", "entity.name.function.macro.rules.rust"],
+      "settings": {"foreground": "#FFECB3", "fontStyle": "italic"}
+    },
+    {
+      "name": "Rust attribute #[ ]",
+      "scope": ["punctuation.definition.attribute.rust", "punctuation.brackets.attribute.rust"],
+      "settings": {"foreground": "#FFECB3"}
+    },
+    {
+      "name": "Rust doc comments (matches C# XML doc text)",
+      "scope": ["comment.line.documentation.rust", "comment.block.documentation.rust"],
+      "settings": {"foreground": "#8A8E99"}
+    },
+
+    // ═══════════════════════════════════════════════════════════════════
+    // TOML (Even Better TOML)
+    // ═══════════════════════════════════════════════════════════════════
+    {
+      "name": "TOML [table] / [[array]] headers (structural anchor)",
+      "scope": ["support.type.property-name.table.toml", "support.type.property-name.array.toml"],
+      "settings": {"foreground": "#4EC9B0", "fontStyle": "bold"}
+    },
+    {
+      "name": "TOML dates/times read as literals",
+      "scope": "constant.other.time",
+      "settings": {"foreground": "#AEEA00"}
+    }
   ]
 }

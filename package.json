@@ -1,8 +1,8 @@
 {
   "name": "dark-sharp-theme",
   "displayName": "Dark Sharp",
-  "description": "A sharp dark theme built for Angular and .NET developers — full semantic token support with consistent colors across C# and Angular templates.",
-  "version": "1.0.8",
+  "description": "A sharp dark theme built for Angular, .NET, and Rust developers — full semantic token support with consistent colors across C#, Angular templates, and Rust.",
+  "version": "1.1.0",
   "publisher": "jczacharia",
   "license": "MIT",
   "icon": "icon.png",
@@ -25,7 +25,10 @@
     "c#",
     "semantic",
     "semantic tokens",
-    "typescript"
+    "typescript",
+    "rust",
+    "rust-analyzer",
+    "toml"
   ],
   "galleryBanner": {
     "color": "#1e1e1e",
@@ -46,7 +49,10 @@
     ]
   },
   "devDependencies": {
-    "@vscode/vsce": "^3.2.1",
-    "prettier": "^3.9.6"
+    "@vscode/vsce": "^3.9.2",
+    "prettier": "^3.10.0"
+  },
+  "scripts": {
+    "build": "npx -y @vscode/vsce@latest package"
   }
 }

@@ -11,3 +11,5 @@ node_modules/**
 .gitignore
 .gitattributes
 package-lock.json
+pnpm-lock.yaml
+pnpm-workspace.yaml

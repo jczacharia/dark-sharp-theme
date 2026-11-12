@@ -1,0 +1,20 @@
+# Dark Sharp — Rust/TOML sample
+[package]
+name = "dark-sharp-sample"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+
+[profile.release]
+lto = true
+opt-level = 3
+
+[[bin]]
+name = "sample"
+path = "src/main.rs"
+
+[package.metadata.sample]
+released = 2026-11-12T09:30:00Z
+inline = { enabled = true, tags = ["a", "b"] }
